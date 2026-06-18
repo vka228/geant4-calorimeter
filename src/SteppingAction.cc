@@ -30,17 +30,13 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
     G4String volName = volume->GetName();
     G4double edepStep = step->GetTotalEnergyDeposit();
     
-  // accumulating energy in scin
-    if (edepStep > 0) {
-        G4cout << "Step in " << volName 
-               << ": Edep = " << edepStep << " keV" << G4endl;
-    }
-    
-    
-    if (volName.contains("Scint")) {
-        if (edepStep > 0) {
-            fEventAction->AddEdep(edepStep);
-        }
+    if (volName.contains("Scint") && edepStep > 0) {
+        G4int layerID = step->GetPreStepPoint()
+            ->GetTouchableHandle()
+            ->GetCopyNumber();
+        
+        fEventAction->AddEdep(edepStep);
+        fEventAction->AddEdepPerLayer(layerID, edepStep);
     }
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

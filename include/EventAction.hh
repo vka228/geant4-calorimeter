@@ -1,11 +1,9 @@
-/// \file EventAction.hh
-/// \brief Definition of the B1::EventAction class
-
 #ifndef B1EventAction_h
 #define B1EventAction_h 1
 
 #include "G4UserEventAction.hh"
 #include "globals.hh"
+#include <vector>
 
 class G4Event;
 
@@ -14,11 +12,9 @@ namespace B1
 
 class RunAction;
 
-/// Event action class
-
 class EventAction : public G4UserEventAction
 {
-  public:
+public:
     EventAction(RunAction* runAction);
     ~EventAction() override = default;
 
@@ -26,14 +22,14 @@ class EventAction : public G4UserEventAction
     void EndOfEventAction(const G4Event* event) override;
 
     void AddEdep(G4double edep) { fEdep += edep; }
+    void AddEdepPerLayer(G4int layerID, G4double edep);
 
-  private:
+private:
     RunAction* fRunAction = nullptr;
     G4double fEdep = 0.;
+    std::vector<G4double> fEdepPerLayer;  // 30 слоев
 };
 
 }  // namespace B1
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
