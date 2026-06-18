@@ -23,11 +23,13 @@ public:
 
     void AddEdep(G4double edep) { fEdep += edep; }
     void AddEdepPerLayer(G4int layerID, G4double edep);
+    void AddEdepWithRadius(G4double edep, G4double radius);  // просто добавляем с радиусом
 
 private:
     RunAction* fRunAction = nullptr;
     G4double fEdep = 0.;
     std::vector<G4double> fEdepPerLayer;
+    std::vector<G4double> fRadialBins;  
 };
 
 }  // namespace B1

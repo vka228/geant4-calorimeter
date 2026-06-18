@@ -10,6 +10,7 @@ namespace B1
 RunAction::RunAction()
 {
     fLayerEdepSum.resize(kNumberOfLayers, 0.);
+    fRadialBinsSum.resize(20, 0.);
 }
 
 RunAction::~RunAction()
@@ -23,6 +24,7 @@ void RunAction::BeginOfRunAction(const G4Run*)
     fTotalEdepSum2 = 0.;
     fEventCount = 0;
     for (auto& val : fLayerEdepSum) val = 0.;
+    for (auto& val : fRadialBinsSum) val = 0.;
     
     fCsvFile.open("calorimeter_data.csv");
     if (fCsvFile.is_open()) {
@@ -30,18 +32,14 @@ void RunAction::BeginOfRunAction(const G4Run*)
         for (G4int i = 0; i < kNumberOfLayers; i++) {
             fCsvFile << ",Layer" << i << "_keV";
         }
+        fCsvFile << ",Radial0,Radial1,Radial2,Radial3,Radial4,Radial5,Radial6,Radial7,Radial8,Radial9,Radial10,Radial11,Radial12,Radial13,Radial14,Radial15,Radial16,Radial17,Radial18,Radial19";
         fCsvFile << "\n";
     }
 }
 
-void RunAction::AddEdep(G4double edep)
-{
-    fTotalEdepSum += edep;
-    fTotalEdepSum2 += edep * edep;
-    fEventCount++;
-}
-
-void RunAction::AddEventData(G4double totalEdep, const std::vector<G4double>& layerEdep)
+void RunAction::AddEventData(G4double totalEdep, 
+                            const std::vector<G4double>& layerEdep,
+                            const std::vector<G4double>& radialBins)
 {
     fEventCount++;
     fTotalEdepSum += totalEdep;
@@ -51,11 +49,17 @@ void RunAction::AddEventData(G4double totalEdep, const std::vector<G4double>& la
         fLayerEdepSum[i] += layerEdep[i];
     }
     
-    // Запись в CSV
+    for (G4int i = 0; i < (G4int)radialBins.size() && i < (G4int)fRadialBinsSum.size(); i++) {
+        fRadialBinsSum[i] += radialBins[i];
+    }
+    
     if (fCsvFile.is_open()) {
         fCsvFile << fEventCount - 1 << "," << totalEdep / MeV;
         for (G4int i = 0; i < (G4int)layerEdep.size() && i < kNumberOfLayers; i++) {
             fCsvFile << "," << layerEdep[i] / keV;
+        }
+        for (G4int i = 0; i < (G4int)radialBins.size(); i++) {
+            fCsvFile << "," << radialBins[i] / keV;
         }
         fCsvFile << "\n";
     }
@@ -77,11 +81,12 @@ void RunAction::EndOfRunAction(const G4Run* run)
     G4cout << "  Resolution: " << (rmsEdep / meanEdep) * 100 << " %" << G4endl;
     G4cout << "========================================" << G4endl;
     
-    G4cout << "Average layer profile:" << G4endl;
-    for (G4int i = 0; i < kNumberOfLayers; i++) {
-        G4double avg = fLayerEdepSum[i] / nofEvents;
+    G4cout << "Radial profile (average):" << G4endl;
+    for (G4int i = 0; i < (G4int)fRadialBinsSum.size(); i++) {
+        G4double avg = fRadialBinsSum[i] / nofEvents;
+        G4double radius = (i + 0.5) * cm;  // центр бина
         if (avg > 0) {
-            G4cout << "  Layer " << i << ": " << avg / keV << " keV" << G4endl;
+            G4cout << "  r = " << radius / cm << " cm: " << avg / keV << " keV" << G4endl;
         }
     }
     G4cout << "========================================" << G4endl;

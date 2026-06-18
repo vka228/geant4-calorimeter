@@ -35,10 +35,13 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
             ->GetTouchableHandle()
             ->GetCopyNumber();
         
-        fEventAction->AddEdep(edepStep);
+        G4ThreeVector pos = step->GetPreStepPoint()->GetPosition();
+        G4double radius = std::sqrt(pos.x()*pos.x() + pos.y()*pos.y());
+        
         fEventAction->AddEdepPerLayer(layerID, edepStep);
+        
+        fEventAction->AddEdepWithRadius(edepStep, radius);
     }
-}
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+}//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 }  // namespace B1
