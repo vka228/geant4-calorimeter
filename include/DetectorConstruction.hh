@@ -1,6 +1,3 @@
-/// \file DetectorConstruction.hh
-/// \brief Definition of the B1::DetectorConstruction class
-
 #ifndef B1DetectorConstruction_h
 #define B1DetectorConstruction_h 1
 
@@ -12,24 +9,23 @@ class G4LogicalVolume;
 namespace B1
 {
 
-/// Detector construction class to define materials and geometry.
+static const G4int kNumberOfLayers = 30;
 
 class DetectorConstruction : public G4VUserDetectorConstruction
 {
-  public:
+public:
     DetectorConstruction() = default;
     ~DetectorConstruction() override = default;
 
     G4VPhysicalVolume* Construct() override;
-
     G4LogicalVolume* GetScoringVolume() const { return fScoringVolume; }
+    
+    static G4int GetNumberOfLayers() { return kNumberOfLayers; }
 
-  protected:
+private:
     G4LogicalVolume* fScoringVolume = nullptr;
 };
 
 }  // namespace B1
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif

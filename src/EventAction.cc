@@ -1,5 +1,6 @@
 #include "EventAction.hh"
 #include "RunAction.hh"
+#include "DetectorConstruction.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4Event.hh"
 
@@ -8,7 +9,7 @@ namespace B1
 
 EventAction::EventAction(RunAction* runAction) : fRunAction(runAction)
 {
-    fEdepPerLayer.resize(30, 0.);  
+    fEdepPerLayer.resize(kNumberOfLayers, 0.);
 }
 
 void EventAction::BeginOfEventAction(const G4Event*)

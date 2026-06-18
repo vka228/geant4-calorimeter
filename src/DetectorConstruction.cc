@@ -28,7 +28,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                                      0, false, 0, true);
     
     // calorimeter params
-    G4int nLayers = 30;
+    G4int nLayers = kNumberOfLayers;  // ← вместо 30
     G4double pbThick = 2.0 * mm;
     G4double scintThick = 4.0 * mm;
     G4double calorSize = 30.0 * cm;

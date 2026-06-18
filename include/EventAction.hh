@@ -27,7 +27,7 @@ public:
 private:
     RunAction* fRunAction = nullptr;
     G4double fEdep = 0.;
-    std::vector<G4double> fEdepPerLayer;  // 30 слоев
+    std::vector<G4double> fEdepPerLayer;
 };
 
 }  // namespace B1
