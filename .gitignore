@@ -1,0 +1,6 @@
+cat > .gitignore << 'EOF'
+build/
+exampleB1
+*.root
+*.o
+EOF
