@@ -6,7 +6,7 @@
 #include "G4SystemOfUnits.hh"
 #include "G4VisAttributes.hh"
 #include "G4Colour.hh"
-#include "G4String.hh"  // Добавляем для G4String
+#include "G4String.hh"  
 
 namespace B1
 {
