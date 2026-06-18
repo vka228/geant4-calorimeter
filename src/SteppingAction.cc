@@ -1,24 +1,16 @@
-/// \file SteppingAction.cc
-/// \brief Implementation of the B1::SteppingAction class
-
 #include "SteppingAction.hh"
-
 #include "DetectorConstruction.hh"
 #include "EventAction.hh"
-
 #include "G4Event.hh"
 #include "G4LogicalVolume.hh"
 #include "G4RunManager.hh"
 #include "G4Step.hh"
+#include "G4SystemOfUnits.hh"
 
 namespace B1
 {
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
 SteppingAction::SteppingAction(EventAction* eventAction) : fEventAction(eventAction) {}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void SteppingAction::UserSteppingAction(const G4Step* step)
 {
@@ -39,9 +31,8 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
         G4double radius = std::sqrt(pos.x()*pos.x() + pos.y()*pos.y());
         
         fEventAction->AddEdepPerLayer(layerID, edepStep);
-        
         fEventAction->AddEdepWithRadius(edepStep, radius);
     }
-}//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+}
 
 }  // namespace B1
